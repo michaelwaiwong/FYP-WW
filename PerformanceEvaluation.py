@@ -3,7 +3,7 @@ import UserGeneration as UG
 import ExhaustiveSearch as ES
 import math
 ##########################################################################
-K=4
+K=3
 Nt=4
 Nr=2
 Nj=Nr
@@ -11,8 +11,7 @@ P=100
 N0=1
 
 inputDim=Nt*Nr*2*K
-NewOutputDim = 6 #4C2
-outputDim=NewOutputDim
+outputDim=K
 
 N_traindata = 10000
 K_hat = int(math.ceil(Nt/Nr))
@@ -23,7 +22,7 @@ def ReadData():
     l=len(data)
     Re_part = []
     Im_part = []
-    y_Hat = []
+    y_hat = []
     for d in data:
         if dataindex <= inputDim:
             if dataindex%2==1:
@@ -31,7 +30,7 @@ def ReadData():
             else:
                 Im_part.append(float(d))
         else:
-            y_Hat.append(int(d))
+            y_hat.append(int(d)) ##
         dataindex+=1
     try:
         H = np.reshape(np.asarray(Re_part)+1j*np.asarray(Im_part),(K*Nr,Nt))
@@ -41,24 +40,7 @@ def ReadData():
     Hlist = []
     for k in range(K):
         Hlist.append(H[k*Nr:(k+1)*Nr,:])
-#    print(y_Hat)
-    y_Hat=ClassMapping(y_Hat)
-#    print(y_Hat)
-    return Hlist,y_Hat,1   
-##########################################################################
-def ClassMapping(y_hat):
-	if y_hat[0]==1:
-		return [0,0,1,1]
-	elif y_hat[1]==1:
-		return [0,1,0,1]
-	elif y_hat[2]==1:
-		return [0,1,1,0]
-	elif y_hat[3]==1:
-		return [1,0,0,1]
-	elif y_hat[4]==1:
-		return [1,0,1,0]
-	else:
-		return [1,1,0,0]
+    return Hlist,y_hat,1  
 ##########################################################################
 def ComputeCapacity(UserList):
     for i in range(K_hat):
@@ -75,7 +57,7 @@ def ComputeCapacity(UserList):
     TempSelectedUser,Capacity = ES.WaterFilling(Nj, Nr, Nt, P, N0, UserList, EffectiveHList)
     return Capacity
 ############################################################################
-Datafile=open("annout1800000_350150_3000.txt","r")    
+Datafile=open("annout1800000_250250_3000.txt","r")  
 #PercentCapacity=0
 #MSE=0
 count0=0
